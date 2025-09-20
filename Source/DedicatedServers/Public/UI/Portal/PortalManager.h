@@ -15,11 +15,22 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FAPIStatusMessage SignUpStatusMessageDelegate;
 
+	UPROPERTY(BlueprintAssignable)
+	FAPIStatusMessage ConfirmStatusMessageDelegate;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnAPIRequestSucceeded OnSignUpSucceeded;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnAPIRequestSucceeded OnConfirmSucceeded;
+	
 	void SignUp(const FString& Username, const FString& Password, const FString& Email);
+	void Confirm(const FString& ConfirmationCode);
 
 	FDSSignUpResponse LastSignUpResponse;
 	FString LastUsername;
 
 private:
 	void SignUp_Response(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
+	void Confirm_Response(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
 };

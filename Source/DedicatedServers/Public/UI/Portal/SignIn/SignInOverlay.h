@@ -32,6 +32,12 @@ private:
 
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<USignUpPage> SignUpPage;
+
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<UConfirmSignUpPage> ConfirmSignUpPage;
+
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<USuccessConfirmedPage> SuccessConfirmedPage;
     
 	UPROPERTY()
 	TObjectPtr<UPortalManager> PortalManager;
@@ -40,5 +46,20 @@ private:
 	void ShowSignUpPage();
 
 	UFUNCTION()
+	void ShowConfirmSignUpPage();
+
+	UFUNCTION()
+	void ShowSuccessConfirmedPage();
+
+	UFUNCTION()
 	void SignUpButtonClicked();
+
+	UFUNCTION()
+	void ConfirmButtonClicked();
+
+	UFUNCTION()
+	void OnSignUpSucceeded();
+
+	UFUNCTION()
+	void OnConfirmSucceeded();
 };
