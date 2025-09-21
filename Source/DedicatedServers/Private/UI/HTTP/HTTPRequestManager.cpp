@@ -1,5 +1,20 @@
 #include "UI/HTTP/HTTPRequestManager.h"
 #include "DedicatedServers/DedicatedServers.h"
+#include "Player/DSLocalPlayerSubsystem.h"
+
+UDSLocalPlayerSubsystem* UHTTPRequestManager::GetDSLocalPlayerSubsystem() const
+{
+	APlayerController* LocalPlayerController = GEngine->GetFirstLocalPlayerController(GetWorld());
+	if (IsValid(LocalPlayerController))
+	{
+		ULocalPlayer* LocalPlayer = Cast<ULocalPlayer>(LocalPlayerController->Player);
+		if (IsValid(LocalPlayer))
+		{
+			return LocalPlayer->GetSubsystem<UDSLocalPlayerSubsystem>();
+		}
+	}
+	return nullptr;
+}
 
 bool UHTTPRequestManager::ContainsErrors(TSharedPtr<FJsonObject> JsonObject)
 {

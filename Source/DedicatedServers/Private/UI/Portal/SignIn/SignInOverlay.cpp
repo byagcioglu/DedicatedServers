@@ -3,10 +3,12 @@
 #include "Components/EditableTextBox.h"
 #include "UI/Portal/PortalManager.h"
 #include "Components/WidgetSwitcher.h"
+#include "UI/Portal/SignIn/SignInPage.h"
 #include "UI/Portal/SignIn/SignUpPage.h"
 #include "UI/Portal/SignIn/ConfirmSignUpPage.h"
 #include "UI/Portal/SignIn/SuccessConfirmedPage.h"
 #include "Components/TextBlock.h"
+#include "Player/DSLocalPlayerSubsystem.h"
 
 void USignInOverlay::NativeConstruct()
 {
@@ -14,7 +16,13 @@ void USignInOverlay::NativeConstruct()
 	check(PortalManagerClass);
     
 	PortalManager = NewObject<UPortalManager>(this, PortalManagerClass);
-	
+
+	SignInPage->Button_SignIn->OnClicked.AddDynamic(this, &USignInOverlay::SignInButtonClicked);
+	SignInPage->Button_SignUp->OnClicked.AddDynamic(this, &USignInOverlay::ShowSignUpPage);
+	//SignInPage->Button_Quit->OnClicked.AddDynamic(PortalManager, &UPortalManager::QuitGame);
+	PortalManager->SignInStatusMessageDelegate.AddDynamic(SignInPage, &USignInPage::UpdateStatusMessage);	
+
+	SignUpPage->Button_Back->OnClicked.AddDynamic(this, &USignInOverlay::USignInOverlay::ShowSignInPage);
 	SignUpPage->Button_SignUp->OnClicked.AddDynamic(this, &USignInOverlay::SignUpButtonClicked);
 	PortalManager->SignUpStatusMessageDelegate.AddDynamic(SignUpPage, &USignUpPage::UpdateStatusMessage);
 	PortalManager->OnSignUpSucceeded.AddDynamic(this, &USignInOverlay::OnSignUpSucceeded);
@@ -24,7 +32,15 @@ void USignInOverlay::NativeConstruct()
 	PortalManager->OnConfirmSucceeded.AddDynamic(this, &USignInOverlay::OnConfirmSucceeded);
 	PortalManager->ConfirmStatusMessageDelegate.AddDynamic(ConfirmSignUpPage, &UConfirmSignUpPage::UpdateStatusMessage);
 	
-	//SuccessConfirmedPage->Button_Ok->OnClicked.AddDynamic(this, &USignInOverlay::ShowSignInPage);
+	SuccessConfirmedPage->Button_Ok->OnClicked.AddDynamic(this, &USignInOverlay::ShowSignInPage);
+
+	ShowSignInPage();
+}
+
+void USignInOverlay::ShowSignInPage()
+{
+	SignInPage->Button_SignIn->SetIsEnabled(true);
+	WidgetSwitcher->SetActiveWidget(SignInPage);
 }
 
 void USignInOverlay::ShowSignUpPage()
@@ -40,6 +56,17 @@ void USignInOverlay::ShowConfirmSignUpPage()
 void USignInOverlay::ShowSuccessConfirmedPage()
 {
 	WidgetSwitcher->SetActiveWidget(SuccessConfirmedPage);
+}
+
+void USignInOverlay::SignInButtonClicked()
+{
+	const FString Username = SignInPage->TextBox_UserName->GetText().ToString();
+	const FString Password = SignInPage->TextBox_Password->GetText().ToString();
+	if (UDSLocalPlayerSubsystem* DSLocalPlayerSubsystem = PortalManager->GetDSLocalPlayerSubsystem(); IsValid(DSLocalPlayerSubsystem))
+	{
+		DSLocalPlayerSubsystem->Password = Password;
+	}
+	PortalManager->SignIn(Username, Password);
 }
 
 void USignInOverlay::SignUpButtonClicked()
