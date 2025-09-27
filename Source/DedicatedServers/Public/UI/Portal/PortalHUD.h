@@ -6,6 +6,7 @@
 
 class USignInOverlay;
 class UDashboardOverlay;
+class UGameSessionsManager;
 /**
  * 
  */
@@ -20,6 +21,9 @@ public:
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UDashboardOverlay> DashboardOverlayClass;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UGameSessionsManager> GameSessionsManagerClass;
 	
 	// IHUDManagement
 	virtual void OnSignIn() override;
@@ -34,4 +38,7 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<UDashboardOverlay> DashboardOverlay;
+
+	UPROPERTY()
+	TObjectPtr<UGameSessionsManager> GameSessionsManager;
 };
