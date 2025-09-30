@@ -22,14 +22,25 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+	virtual void OnCountdownTimerFinished(ECountdownTimerType Type) override;
+	void CheckAndStartLobbyCountdown();
 	virtual void PreLogin(const FString& Options, const FString& Address, const FUniqueNetIdRepl& UniqueId, FString& ErrorMessage) override;
 
+	UPROPERTY()
+	ELobbyStatus LobbyStatus;
+
+	UPROPERTY(EditDefaultsOnly)
+	int32 MinPlayers;
+	
 	UPROPERTY(EditDefaultsOnly)
 	TSoftObjectPtr<UWorld> DestinationMap;
 
 private:
 	UPROPERTY()
 	TObjectPtr<UDS_GameInstanceSubsystem> DSGameInstanceSubsystem;
+
+	UPROPERTY(EditDefaultsOnly)
+	FCountdownTimerHandle LobbyCountdownTimer;
 	
 	void InitGameLift();
 	void SetServerParameters(FServerParameters& OutServerParameters);

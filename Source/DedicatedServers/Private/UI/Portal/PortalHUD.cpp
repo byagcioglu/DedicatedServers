@@ -2,7 +2,6 @@
 #include "UI/Portal/SignIn/SignInOverlay.h"
 #include "Blueprint/UserWidget.h"
 #include "UI/Portal/Dashboard/DashboardOverlay.h"
-#include "UI/GameSessions/GameSessionsManager.h"
 
 
 void APortalHUD::BeginPlay()
@@ -34,9 +33,6 @@ void APortalHUD::OnSignIn()
 	{
 		DashboardOverlay->AddToViewport();
 	}
-
-	GameSessionsManager=NewObject<UGameSessionsManager>(this, GameSessionsManagerClass);
-	GameSessionsManager->JoinGameSession();
 }
 
 void APortalHUD::OnSignOut()
