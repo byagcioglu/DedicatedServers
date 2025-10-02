@@ -6,11 +6,23 @@
 #include "Game/DS_GameInstanceSubsystem.h"
 #include "DedicatedServers/DedicatedServers.h"
 
-
+ADS_LobbyGameMode::ADS_LobbyGameMode()
+{
+	bUseSeamlessTravel = true;
+	LobbyStatus = ELobbyStatus::WaitingForPlayers;
+	MinPlayers = 1;
+	LobbyCountdownTimer.Type = ECountdownTimerType::LobbyCountdown;
+}
 
 void ADS_LobbyGameMode::PostLogin(APlayerController* NewPlayer)
 {
 	Super::PostLogin(NewPlayer);
+	CheckAndStartLobbyCountdown();
+}
+
+void ADS_LobbyGameMode::InitSeamlessTravelPlayer(AController* NewController)
+{
+	Super::InitSeamlessTravelPlayer(NewController);
 	CheckAndStartLobbyCountdown();
 }
 

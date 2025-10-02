@@ -18,12 +18,15 @@ class DEDICATEDSERVERS_API ADS_LobbyGameMode : public ADS_GameModeBase
 	GENERATED_BODY()
 
 public:
+	ADS_LobbyGameMode();
 	virtual void PostLogin(APlayerController* NewPlayer) override;
+	void CheckAndStartLobbyCountdown();
+	
 
 protected:
 	virtual void BeginPlay() override;
 	virtual void OnCountdownTimerFinished(ECountdownTimerType Type) override;
-	void CheckAndStartLobbyCountdown();
+	virtual void InitSeamlessTravelPlayer(AController* NewController) override;
 	virtual void PreLogin(const FString& Options, const FString& Address, const FUniqueNetIdRepl& UniqueId, FString& ErrorMessage) override;
 
 	UPROPERTY()
