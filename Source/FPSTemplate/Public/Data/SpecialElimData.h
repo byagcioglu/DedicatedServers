@@ -21,6 +21,9 @@ struct FSpecialElimInfo
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TObjectPtr<UTexture2D> ElimIcon = nullptr;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FString CareerPageAchievementName = FString();
+
 	UPROPERTY(BlueprintReadOnly)
 	int32 SequentialElimCount = 0;
 

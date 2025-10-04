@@ -8,6 +8,9 @@
 
 class UWidgetSwitcher;
 class UGamePage;
+class UCareerPage;
+class UGameStatsManager;
+class UButton;
 
 /**
  * 
@@ -24,10 +27,33 @@ public:
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UGamePage> GamePage;
 
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<UCareerPage> CareerPage;
+
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<UButton> Button_Game;
+	
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<UButton> Button_Career;
+
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<UButton> Button_Leaderboard;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UGameStatsManager> GameStatsManagerClass;
+
 protected:
 	virtual void NativeConstruct() override;
 	
 private:
+	UPROPERTY()
+	TObjectPtr<UGameStatsManager> GameStatsManager;
+	
 	UFUNCTION()
 	void ShowGamePage();
+
+	UFUNCTION()
+	void ShowCareerPage();
+
+	void DisableButton(UButton* Button) const;
 };
