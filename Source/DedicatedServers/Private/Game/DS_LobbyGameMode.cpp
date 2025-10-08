@@ -4,6 +4,8 @@
 #include "Game/DS_LobbyGameMode.h"
 #include "Kismet/GameplayStatics.h"
 #include "Game/DS_GameInstanceSubsystem.h"
+#include "Player/DSPlayerController.h"
+
 #include "DedicatedServers/DedicatedServers.h"
 
 ADS_LobbyGameMode::ADS_LobbyGameMode()
@@ -119,6 +121,22 @@ void ADS_LobbyGameMode::InitGameLift()
 			DSGameInstanceSubsystem->InitGameLift(ServerParameters);
 		}
 	}
+}
+
+FString ADS_LobbyGameMode::InitNewPlayer(APlayerController* NewPlayerController, const FUniqueNetIdRepl& UniqueId, const FString& Options, const FString& Portal)
+{
+	FString InitializedString = Super::InitNewPlayer(NewPlayerController, UniqueId, Options, Portal);
+
+	const FString PlayerSessionId = UGameplayStatics::ParseOption(Options, TEXT("PlayerSessionId"));
+	const FString Username = UGameplayStatics::ParseOption(Options, TEXT("Username"));
+
+	if (ADSPlayerController* DSPlayerController = Cast<ADSPlayerController>(NewPlayerController); IsValid(DSPlayerController))
+	{
+		DSPlayerController->PlayerSessionId = PlayerSessionId;
+		DSPlayerController->Username = Username;
+	}
+	
+	return InitializedString;
 }
 
 void ADS_LobbyGameMode::SetServerParameters(FServerParameters& OutServerParameters)

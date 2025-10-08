@@ -55,3 +55,12 @@ void AShooterGameModeBase::RequestRespawn(ACharacter* ElimmedCharacter, AControl
 		RestartPlayerAtPlayerStart(ElimmedController, PlayerStarts[Selection]);
 	}
 }
+
+void AShooterGameModeBase::OnMatchEnded()
+{
+	Super::OnMatchEnded();
+
+	TArray<FString> LeaderIds;
+	
+	UpdateLeaderboard(LeaderIds);
+}

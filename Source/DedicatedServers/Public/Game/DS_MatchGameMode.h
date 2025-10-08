@@ -27,6 +27,7 @@ protected:
 	virtual void BeginPlay() override;
 	void SetClientInputEnabled(bool bEnabled);
 	virtual void OnMatchEnded();
+	void UpdateLeaderboard(const TArray<FString>& LeaderboardNames);
 	
 	UPROPERTY(EditDefaultsOnly)
 	FCountdownTimerHandle PreMatchTimer;
