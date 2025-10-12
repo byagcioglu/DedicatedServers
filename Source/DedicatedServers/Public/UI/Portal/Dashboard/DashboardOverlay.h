@@ -11,6 +11,7 @@ class UGamePage;
 class UCareerPage;
 class UGameStatsManager;
 class UButton;
+class ULeaderboardPage;
 
 /**
  * 
@@ -29,6 +30,9 @@ public:
 
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UCareerPage> CareerPage;
+
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<ULeaderboardPage> LeaderboardPage;
 
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UButton> Button_Game;
@@ -54,6 +58,9 @@ private:
 
 	UFUNCTION()
 	void ShowCareerPage();
+
+	UFUNCTION()
+	void ShowLeaderboardPage();
 
 	void DisableButton(UButton* Button) const;
 };

@@ -2,7 +2,9 @@
 
 
 #include "Game/ShooterGameModeBase.h"
-
+#include "Game/MatchGameState.h"
+#include "Player/DSPlayerController.h"
+#include "Player/MatchPlayerState.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/PlayerStart.h"
 #include "Kismet/GameplayStatics.h"
@@ -61,6 +63,18 @@ void AShooterGameModeBase::OnMatchEnded()
 	Super::OnMatchEnded();
 
 	TArray<FString> LeaderIds;
+	if (AMatchGameState* MatchGameState = GetGameState<AMatchGameState>(); IsValid(MatchGameState))
+	{
+		MatchGameState->UpdateLeader();
+		TArray<AMatchPlayerState*> Leaders = MatchGameState->GetLeaders();
+		for (AMatchPlayerState* Leader : Leaders)
+		{
+			if (ADSPlayerController* LeaderPC = Cast<ADSPlayerController>(Leader->GetPlayerController()); IsValid(LeaderPC))
+			{
+				LeaderIds.Add(LeaderPC->Username);
+			}
+		}
+	}
 	
 	UpdateLeaderboard(LeaderIds);
 }
