@@ -35,6 +35,20 @@ void USignInOverlay::NativeConstruct()
 	SuccessConfirmedPage->Button_Ok->OnClicked.AddDynamic(this, &USignInOverlay::ShowSignInPage);
 
 	ShowSignInPage();
+	AutoSignIn();
+}
+
+void USignInOverlay::AutoSignIn()
+{
+	if (UDSLocalPlayerSubsystem* DSLocalPlayerSubsystem = PortalManager->GetDSLocalPlayerSubsystem(); IsValid(DSLocalPlayerSubsystem))
+	{
+		const FString& Username = DSLocalPlayerSubsystem->Username;
+		const FString& Password = DSLocalPlayerSubsystem->Password;
+		if (Username.IsEmpty() || Password.IsEmpty()) return;
+
+		SignInPage->Button_SignIn->SetIsEnabled(false);
+		PortalManager->SignIn(Username, Password);
+	}
 }
 
 void USignInOverlay::ShowSignInPage()

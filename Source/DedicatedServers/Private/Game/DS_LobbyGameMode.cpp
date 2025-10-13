@@ -5,7 +5,9 @@
 #include "Kismet/GameplayStatics.h"
 #include "Game/DS_GameInstanceSubsystem.h"
 #include "Player/DSPlayerController.h"
-
+#include "Game/DSGameState.h"
+#include "Lobby/LobbyPlayerInfo.h"
+#include "Lobby/LobbyState.h"
 #include "DedicatedServers/DedicatedServers.h"
 
 ADS_LobbyGameMode::ADS_LobbyGameMode()
@@ -26,6 +28,11 @@ void ADS_LobbyGameMode::InitSeamlessTravelPlayer(AController* NewController)
 {
 	Super::InitSeamlessTravelPlayer(NewController);
 	CheckAndStartLobbyCountdown();
+
+	if (LobbyStatus != ELobbyStatus::SeamlessTravelling)
+	{
+		AddPlayerInfoToLobbyState(NewController);
+	}
 }
 
 void ADS_LobbyGameMode::CheckAndStartLobbyCountdown()
@@ -135,8 +142,33 @@ FString ADS_LobbyGameMode::InitNewPlayer(APlayerController* NewPlayerController,
 		DSPlayerController->PlayerSessionId = PlayerSessionId;
 		DSPlayerController->Username = Username;
 	}
+
+	if (LobbyStatus != ELobbyStatus::SeamlessTravelling)
+	{
+		AddPlayerInfoToLobbyState(NewPlayerController);
+	}
 	
 	return InitializedString;
+}
+
+void ADS_LobbyGameMode::AddPlayerInfoToLobbyState(AController* Player) const
+{
+	ADSPlayerController* DSPlayerController = Cast<ADSPlayerController>(Player);
+	ADSGameState* DSGameState = GetGameState<ADSGameState>();
+	if (IsValid(DSGameState) && IsValid(DSGameState->LobbyState) && IsValid(DSPlayerController))
+	{
+		FLobbyPlayerInfo PlayerInfo(DSPlayerController->Username);
+		DSGameState->LobbyState->AddPlayerInfo(PlayerInfo);
+	}
+}
+void ADS_LobbyGameMode::RemovePlayerInfoFromLobbyState(AController* Player) const
+{
+	ADSPlayerController* DSPlayerController = Cast<ADSPlayerController>(Player);
+	ADSGameState* DSGameState = GetGameState<ADSGameState>();
+	if (IsValid(DSGameState) && IsValid(DSGameState->LobbyState) && IsValid(DSPlayerController))
+	{
+		DSGameState->LobbyState->RemovePlayerInfo(DSPlayerController->Username);
+	}
 }
 
 void ADS_LobbyGameMode::SetServerParameters(FServerParameters& OutServerParameters)
