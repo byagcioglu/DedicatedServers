@@ -29,7 +29,9 @@ protected:
 	virtual void InitSeamlessTravelPlayer(AController* NewController) override;
 	virtual void PreLogin(const FString& Options, const FString& Address, const FUniqueNetIdRepl& UniqueId, FString& ErrorMessage) override;
 	virtual FString InitNewPlayer(APlayerController* NewPlayerController, const FUniqueNetIdRepl& UniqueId, const FString& Options, const FString& Portal = L"") override;
-
+	virtual void Logout(AController* Exiting) override;
+	void CheckAndStopLobbyCountdown();
+	
 	UPROPERTY()
 	ELobbyStatus LobbyStatus;
 

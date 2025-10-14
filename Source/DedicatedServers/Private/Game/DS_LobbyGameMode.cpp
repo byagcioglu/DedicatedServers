@@ -66,6 +66,26 @@ void ADS_LobbyGameMode::PreLogin(const FString& Options, const FString& Address,
 	TryAcceptPlayerSession(PlayerSessionId, Username, ErrorMessage);
 }
 
+void ADS_LobbyGameMode::Logout(AController* Exiting)
+{
+	Super::Logout(Exiting);
+	CheckAndStopLobbyCountdown();
+	RemovePlayerSession(Exiting);
+	if (LobbyStatus != ELobbyStatus::SeamlessTravelling)
+	{
+		RemovePlayerInfoFromLobbyState(Exiting);
+	}
+}
+
+void ADS_LobbyGameMode::CheckAndStopLobbyCountdown()
+{
+	if (GetNumPlayers() - 1 < MinPlayers && LobbyStatus == ELobbyStatus::CountdownToSeamlessTravel)
+	{
+		LobbyStatus = ELobbyStatus::WaitingForPlayers;
+		StopCountdownTimer(LobbyCountdownTimer);
+	}
+}
+
 void ADS_LobbyGameMode::TryAcceptPlayerSession(const FString& PlayerSessionId, const FString& Username, FString& OutErrorMessage)
 {
 	if (PlayerSessionId.IsEmpty() || Username.IsEmpty())
